@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Math Speed Test — Static</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#7c3aed;--muted:#9aa4b2;--glass:rgba(255,255,255,0.04)}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial;color:#e6eef6;background:linear-gradient(180deg,#071028 0%, #071c2f 60%), radial-gradient(600px 300px at 10% 10%, rgba(124,58,237,0.08), transparent 10%), radial-gradient(700px 300px at 90% 90%, rgba(14,165,233,0.03), transparent 10%);min-height:100vh;overflow:hidden}
+    header{padding:28px 24px;display:flex;gap:16px;align-items:center}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo .dot{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);box-shadow:0 8px 30px rgba(124,58,237,0.18), inset 0 -6px 18px rgba(255,255,255,0.04)}
+    .title{font-weight:700;font-size:18px}
+    .container{width:min(1100px,96%);margin:20px auto;display:grid;grid-template-columns:360px 1fr;gap:22px;padding-bottom:60px}
+
+    /* Left controls */
+    .panel{background:linear-gradient(180deg,var(--glass),rgba(255,255,255,0.02));backdrop-filter:blur(6px);padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,0.03)}
+    .section{margin-bottom:14px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+    .select, .btn, .input, .chip{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{cursor:pointer;text-align:center;font-weight:600;padding:8px 10px}
+    .chip.active{background:linear-gradient(90deg,var(--accent),#06b6d4);box-shadow:0 8px 18px rgba(7,20,48,0.6);color:white}
+    .btn{cursor:pointer;background:linear-gradient(90deg,#1b2b46,#13203a);border:none}
+
+    /* Right stage */
+    .stage{position:relative;padding:28px;border-radius:14px;overflow:hidden}
+    .question-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:28px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:12px}
+    .question{font-size:34px;font-weight:800;letter-spacing:0.4px}
+    .small{font-size:13px;color:var(--muted)}
+
+    .input-ans{display:flex;gap:10px;align-items:center}
+    .num-input{font-size:20px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);min-width:180px}
+    .num-input.wrong{border-color:#ef4444;background:rgba(239,68,68,0.04)}
+    .num-input.right{border-color:#10b981;background:rgba(16,185,129,0.04)}
+
+    .timer{font-weight:700;font-size:18px}
+    .result{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.012), transparent);border:1px solid rgba(255,255,255,0.02)}
+
+    /* Parallax layers */
+    .parallax{position:absolute;inset:0;pointer-events:none}
+    .layer{position:absolute;border-radius:50%;opacity:0.12;transform:translate3d(0,0,0)}
+    .l1{width:420px;height:420px;left:-120px;top:-100px;background:radial-gradient(circle at 30% 30%, rgba(124,58,237,0.5), transparent 25%)}
+    .l2{width:260px;height:260px;right:-80px;bottom:-80px;background:radial-gradient(circle at 70% 70%, rgba(6,182,212,0.35), transparent 30%)}
+
+    footer{color:var(--muted);text-align:center;padding:18px 0}
+
+    /* small screen */
+    @media (max-width:880px){.container{grid-template-columns:1fr;}.logo .dot{width:36px;height:36px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><div class="dot"></div><div><div class="title">Math Speed Test</div><div style="font-size:12px;color:var(--muted)">Train calculation speed — static HTML</div></div></div>
+  </header>
+
+  <div class="container">
+    <aside class="panel">
+      <div class="section">
+        <label>Difficulty</label>
+        <div class="chips" id="difficulty">
+          <div class="chip active" data-level="easy">Easy (2 operands)</div>
+          <div class="chip" data-level="medium">Medium (3 operands)</div>
+          <div class="chip" data-level="hard">Hard (4 operands)</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <label>Operation</label>
+        <div class="chips" id="operation">
+          <div class="chip active" data-op="mix">Mix</div>
+          <div class="chip" data-op="add">Add</div>
+          <div class="chip" data-op="sub">Subtract</div>
+          <div class="chip" data-op="mul">Multiply</div>
+          <div class="chip" data-op="div">Divide</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <label>Test settings</label>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input class="input" id="questionCount" type="number" min="1" max="50" value="10" />
+        </div>
+        <div class="small">Questions per set</div>
+      </div>
+
+      <div class="section">
+        <button class="btn" id="newQ">Generate Question</button>
+      </div>
+
+      <div class="section">
+        <label>Tip</label>
+        <div class="small">Choose difficulty and operation. Tap the <strong>Start Timer</strong> button when you're ready to begin solving. Type your answer — the input will turn green the instant the full correct answer is typed and the timer stops. If the answer is incorrect the input glows red. Feedback will show speed and tips to improve.</div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="stage panel">
+        <div class="parallax" id="parallax">
+          <div class="layer l1"></div>
+          <div class="layer l2"></div>
+        </div>
+
+        <div class="question-card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="small">Difficulty: <span id="curDiff">Easy</span> · Operation: <span id="curOp">Mix</span></div>
+              <div class="question" id="question">—</div>
+            </div>
+            <div style="text-align:right">
+              <div class="timer" id="timer">00.000 s</div>
+              <div class="small">Attempts: <span id="attempts">0</span></div>
+            </div>
+          </div>
+
+          <div class="input-ans">
+            <input id="answerInput" class="num-input" type="text" placeholder="Tap Start Timer, then type answer" inputmode="numeric" autocomplete="off" />
+            <button class="btn" id="startBtn">Start Timer</button>
+            <button class="btn" id="checkBtn">Check</button>
+          </div>
+
+          <div class="result" id="result">No attempts yet — generate a question to begin.</div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
+          <button class="btn" id="nextBtn">Next</button>
+          <div class="small">Quick feedback: <span id="quickFeedback">—</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer>Made with ☕ and math. Small parallax + animations included.</footer>
+
+  <script>
+    // --- State ---
+    const state = {
+      difficulty: 'easy',
+      operation: 'mix',
+      operands: 2,
+      current: null,
+      startTime: null,
+      timerRaf: null,
+      attempts: 0
+    }
+
+    // --- Helpers ---
+    const el = id => document.getElementById(id)
+    function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+
+    function pickOperation(op){
+      if(op==='mix'){
+        const pool=['add','sub','mul','div'];
+        return pool[randInt(0,pool.length-1)];
+      }
+      return op;
+    }
+
+    function makeQuestion(){
+      const operandsCount = state.operands;
+      const opChoice = state.operation;
+      const chosenOp = opChoice==='mix' ? pickOperation('mix') : opChoice;
+      // Generate 2-digit numbers mostly, smaller if multiply to avoid huge numbers
+      const nums = [];
+      for(let i=0;i<operandsCount;i++){
+        let n = randInt(10,99);
+        if(chosenOp==='mul') n = randInt(2,20); // keep products manageable
+        if(chosenOp==='div') n = randInt(2,99);
+        nums.push(n);
+      }
+
+      // Build expression string and compute correct answer
+      let expr = '';
+      let answer = nums[0];
+      expr += nums[0];
+      for(let i=1;i<nums.length;i++){
+        let op = chosenOp;
+        if(opChoice==='mix') op = pickOperation('mix');
+        const n = nums[i];
+        if(op==='add'){ expr += ' + ' + n; answer = (Math.round((answer + n) * 1000))/1000 }
+        else if(op==='sub'){ expr += ' - ' + n; answer = (Math.round((answer - n) * 1000))/1000 }
+        else if(op==='mul'){ expr += ' × ' + n; answer = (Math.round((answer * n) * 1000))/1000 }
+        else if(op==='div'){ expr += ' ÷ ' + n; answer = (Math.round((answer / n) * 1000))/1000 }
+      }
+
+      // For display, keep fractions where necessary but compare numerically
+      return { expr, answer };
+    }
+
+    // --- UI binding ---
+    // chips
+    document.querySelectorAll('#difficulty .chip').forEach(c=>c.addEventListener('click',()=>{
+      document.querySelectorAll('#difficulty .chip').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      state.difficulty = c.dataset.level;
+      state.operands = state.difficulty==='easy'?2:state.difficulty==='medium'?3:4;
+      el('curDiff').textContent = c.textContent.split(' ')[0];
+    }))
+    document.querySelectorAll('#operation .chip').forEach(c=>c.addEventListener('click',()=>{
+      document.querySelectorAll('#operation .chip').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      state.operation = c.dataset.op;
+      el('curOp').textContent = c.textContent;
+    }))
+
+    // generate
+    el('newQ').addEventListener('click',()=>{
+      resetSession();
+      generateAndShow();
+    })
+
+    el('nextBtn').addEventListener('click',()=>{ resetSession(); generateAndShow(); })
+
+    function generateAndShow(){
+      const q = makeQuestion();
+      state.current = q;
+      el('question').textContent = q.expr;
+      el('answerInput').value = '';
+      el('result').textContent = 'Ready — press Start Timer when you want to begin.';
+      el('attempts').textContent = state.attempts;
+      setInputNeutral();
+    }
+
+    function resetSession(){
+      stopTimer();
+      state.startTime = null;
+      el('timer').textContent = '00.000 s';
+      state.attempts = 0;
+      el('attempts').textContent = 0;
+      el('quickFeedback').textContent = '—';
+    }
+
+    // Timer
+    function startTimer(){
+      if(!state.current) { el('result').textContent = 'Generate a question first.'; return }
+      if(state.startTime) return; // already started
+      state.startTime = performance.now();
+      el('result').textContent = 'Timer started — go!';
+      el('answerInput').focus();
+      tick();
+    }
+    function tick(){
+      if(!state.startTime) return;
+      const elapsed = (performance.now() - state.startTime)/1000;
+      el('timer').textContent = elapsed.toFixed(3) + ' s';
+      state.timerRaf = requestAnimationFrame(tick);
+    }
+    function stopTimer(){
+      if(state.timerRaf) cancelAnimationFrame(state.timerRaf);
+      state.timerRaf = null;
+    }
+
+    el('startBtn').addEventListener('click', ()=> startTimer())
+
+    // Input check
+    const answerInput = el('answerInput');
+    answerInput.addEventListener('input', onType);
+    el('checkBtn').addEventListener('click', ()=>manualCheck())
+
+    function parseNumber(s){
+      // Accept integers and decimals with dot
+      const cleaned = s.replace(',', '.').trim();
+      if(cleaned.length===0) return null;
+      const n = Number(cleaned);
+      return Number.isFinite(n)?n:null;
+    }
+
+    function onType(e){
+      const val = e.target.value;
+      const parsed = parseNumber(val);
+      if(parsed===null){ setInputNeutral(); return }
+
+      // compare with tolerance for floating math (esp divisions)
+      const correct = state.current.answer;
+      const tol = 0.0005; // allow minor float rounding
+
+      if(Math.abs(parsed - correct) < tol){
+        // correct
+        setInputRight();
+        finalizeCorrect();
+      } else {
+        // If current typed string is prefix of correct when converted to string -> helpful UX
+        const correctStr = String(correct).replace('.', '');
+        const typedDigits = val.replace('.', '');
+        if(correctStr.startsWith(typedDigits) && typedDigits.length>0){
+          // user is typing the correct number digit-by-digit; keep neutral
+          setInputNeutral();
+        } else {
+          setInputWrong();
+        }
+      }
+    }
+
+    function setInputWrong(){
+      answerInput.classList.remove('right');
+      answerInput.classList.add('wrong');
+    }
+    function setInputRight(){
+      answerInput.classList.remove('wrong');
+      answerInput.classList.add('right');
+    }
+    function setInputNeutral(){
+      answerInput.classList.remove('wrong');
+      answerInput.classList.remove('right');
+    }
+
+    function manualCheck(){
+      const parsed = parseNumber(answerInput.value);
+      if(parsed===null){ el('result').textContent = 'Type an answer before checking.'; return }
+      const correct = state.current.answer;
+      if(Math.abs(parsed - correct) < 0.0005){
+        setInputRight(); finalizeCorrect();
+      } else {
+        setInputWrong(); el('result').textContent = 'Incorrect — keep trying.';
+        state.attempts++;
+        el('attempts').textContent = state.attempts;
+      }
+    }
+
+    function finalizeCorrect(){
+      if(!state.startTime) state.startTime = performance.now(); // if they forgot to start, treat their time as 0
+      const end = performance.now();
+      const total = (end - state.startTime)/1000;
+      stopTimer();
+      el('timer').textContent = total.toFixed(3) + ' s';
+      el('result').innerHTML = `<strong>Correct!</strong> Answer: ${state.current.answer} · Time: ${total.toFixed(3)} s`;
+      state.attempts++;
+      el('attempts').textContent = state.attempts;
+      giveFeedback(total);
+    }
+
+    function giveFeedback(s){
+      let msg = '';
+      if(s < 2.5) msg = 'Lightning — incredible reaction speed!';
+      else if(s < 6) msg = 'Very fast — excellent.';
+      else if(s < 12) msg = 'Good — keep practicing to speed up.';
+      else msg = 'A bit slow — try mental shortcuts: estimate, break into chunks.';
+      el('quickFeedback').textContent = msg;
+
+      // Add small tips in result
+      const tips = [];
+      if(state.operation==='mul') tips.push('For multiply: break numbers (eg 14×6 = 14×(5+1)=70+14).');
+      if(state.operation==='add' || state.operation==='mix') tips.push('For add/sub: round and adjust (eg 79+68 = 80+67).');
+      tips.push('Try doing warm-ups with smaller numbers, and time short bursts (5 questions).');
+      el('result').innerHTML += `<div style="margin-top:8px;font-size:13px;color:var(--muted)">Tip: ${tips.join(' ')}</div>`;
+    }
+
+    // small parallax effect based on mouse
+    (function(){
+      const par = document.getElementById('parallax');
+      par.addEventListener('mousemove', e=>{
+        const rc = par.getBoundingClientRect();
+        const cx = (e.clientX - rc.left)/rc.width - 0.5;
+        const cy = (e.clientY - rc.top)/rc.height - 0.5;
+        document.querySelectorAll('.parallax .layer').forEach((L,i)=>{
+          const depth = (i+1)*6;
+          L.style.transform = `translate3d(${cx*depth}px, ${cy*depth}px, 0) scale(${1 + i*0.02})`;
+        })
+      })
+    })();
+
+    // init sample
+    generateAndShow();
+  </script>
+</body>
+</html>
