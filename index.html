@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -11,50 +12,47 @@
     .logo{display:flex;align-items:center;gap:12px}
     .logo .dot{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);box-shadow:0 8px 30px rgba(124,58,237,0.18), inset 0 -6px 18px rgba(255,255,255,0.04)}
     .title{font-weight:700;font-size:18px}
-    .container{width:min(1100px,96%);margin:20px auto;display:grid;grid-template-columns:360px 1fr;gap:22px;padding-bottom:60px}
+    .container{width:min(1100px,96%);margin:20px auto;display:grid;grid-template-columns:360px 1fr;gap:22px;padding-bottom:60px}/* Left controls */
+.panel{background:linear-gradient(180deg,var(--glass),rgba(255,255,255,0.02));backdrop-filter:blur(6px);padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,0.03)}
+.section{margin-bottom:14px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+.select, .btn, .input, .chip{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{cursor:pointer;text-align:center;font-weight:600;padding:8px 10px}
+.chip.active{background:linear-gradient(90deg,var(--accent),#06b6d4);box-shadow:0 8px 18px rgba(7,20,48,0.6);color:white}
+.btn{cursor:pointer;background:linear-gradient(90deg,#1b2b46,#13203a);border:none}
 
-    /* Left controls */
-    .panel{background:linear-gradient(180deg,var(--glass),rgba(255,255,255,0.02));backdrop-filter:blur(6px);padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,0.03)}
-    .section{margin-bottom:14px}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
-    .select, .btn, .input, .chip{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
-    .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{cursor:pointer;text-align:center;font-weight:600;padding:8px 10px}
-    .chip.active{background:linear-gradient(90deg,var(--accent),#06b6d4);box-shadow:0 8px 18px rgba(7,20,48,0.6);color:white}
-    .btn{cursor:pointer;background:linear-gradient(90deg,#1b2b46,#13203a);border:none}
+/* Right stage */
+.stage{position:relative;padding:28px;border-radius:14px;overflow:hidden}
+.question-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:28px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:12px}
+.question{font-size:34px;font-weight:800;letter-spacing:0.4px}
+.small{font-size:13px;color:var(--muted)}
 
-    /* Right stage */
-    .stage{position:relative;padding:28px;border-radius:14px;overflow:hidden}
-    .question-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:28px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:12px}
-    .question{font-size:34px;font-weight:800;letter-spacing:0.4px}
-    .small{font-size:13px;color:var(--muted)}
+.input-ans{display:flex;gap:10px;align-items:center}
+.num-input{font-size:20px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);min-width:180px}
+.num-input.wrong{border-color:#ef4444;background:rgba(239,68,68,0.04)}
+.num-input.right{border-color:#10b981;background:rgba(16,185,129,0.04)}
 
-    .input-ans{display:flex;gap:10px;align-items:center}
-    .num-input{font-size:20px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);min-width:180px}
-    .num-input.wrong{border-color:#ef4444;background:rgba(239,68,68,0.04)}
-    .num-input.right{border-color:#10b981;background:rgba(16,185,129,0.04)}
+.timer{font-weight:700;font-size:18px}
+.result{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.012), transparent);border:1px solid rgba(255,255,255,0.02)}
 
-    .timer{font-weight:700;font-size:18px}
-    .result{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.012), transparent);border:1px solid rgba(255,255,255,0.02)}
+/* Parallax layers */
+.parallax{position:absolute;inset:0;pointer-events:none}
+.layer{position:absolute;border-radius:50%;opacity:0.12;transform:translate3d(0,0,0)}
+.l1{width:420px;height:420px;left:-120px;top:-100px;background:radial-gradient(circle at 30% 30%, rgba(124,58,237,0.5), transparent 25%)}
+.l2{width:260px;height:260px;right:-80px;bottom:-80px;background:radial-gradient(circle at 70% 70%, rgba(6,182,212,0.35), transparent 30%)}
 
-    /* Parallax layers */
-    .parallax{position:absolute;inset:0;pointer-events:none}
-    .layer{position:absolute;border-radius:50%;opacity:0.12;transform:translate3d(0,0,0)}
-    .l1{width:420px;height:420px;left:-120px;top:-100px;background:radial-gradient(circle at 30% 30%, rgba(124,58,237,0.5), transparent 25%)}
-    .l2{width:260px;height:260px;right:-80px;bottom:-80px;background:radial-gradient(circle at 70% 70%, rgba(6,182,212,0.35), transparent 30%)}
+footer{color:var(--muted);text-align:center;padding:18px 0}
 
-    footer{color:var(--muted);text-align:center;padding:18px 0}
+/* small screen */
+@media (max-width:880px){.container{grid-template-columns:1fr;}.logo .dot{width:36px;height:36px}}
 
-    /* small screen */
-    @media (max-width:880px){.container{grid-template-columns:1fr;}.logo .dot{width:36px;height:36px}}
   </style>
 </head>
 <body>
   <header>
     <div class="logo"><div class="dot"></div><div><div class="title">Math Speed Test</div><div style="font-size:12px;color:var(--muted)">Train calculation speed — static HTML</div></div></div>
-  </header>
-
-  <div class="container">
+  </header>  <div class="container">
     <aside class="panel">
       <div class="section">
         <label>Difficulty</label>
@@ -63,76 +61,71 @@
           <div class="chip" data-level="medium">Medium (3 operands)</div>
           <div class="chip" data-level="hard">Hard (4 operands)</div>
         </div>
-      </div>
-
-      <div class="section">
-        <label>Operation</label>
-        <div class="chips" id="operation">
-          <div class="chip active" data-op="mix">Mix</div>
-          <div class="chip" data-op="add">Add</div>
-          <div class="chip" data-op="sub">Subtract</div>
-          <div class="chip" data-op="mul">Multiply</div>
-          <div class="chip" data-op="div">Divide</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <label>Test settings</label>
-        <div style="display:flex;gap:8px;margin-bottom:8px">
-          <input class="input" id="questionCount" type="number" min="1" max="50" value="10" />
-        </div>
-        <div class="small">Questions per set</div>
-      </div>
-
-      <div class="section">
-        <button class="btn" id="newQ">Generate Question</button>
-      </div>
-
-      <div class="section">
-        <label>Tip</label>
-        <div class="small">Choose difficulty and operation. Tap the <strong>Start Timer</strong> button when you're ready to begin solving. Type your answer — the input will turn green the instant the full correct answer is typed and the timer stops. If the answer is incorrect the input glows red. Feedback will show speed and tips to improve.</div>
-      </div>
-    </aside>
-
-    <main>
-      <div class="stage panel">
-        <div class="parallax" id="parallax">
-          <div class="layer l1"></div>
-          <div class="layer l2"></div>
-        </div>
-
-        <div class="question-card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div class="small">Difficulty: <span id="curDiff">Easy</span> · Operation: <span id="curOp">Mix</span></div>
-              <div class="question" id="question">—</div>
-            </div>
-            <div style="text-align:right">
-              <div class="timer" id="timer">00.000 s</div>
-              <div class="small">Attempts: <span id="attempts">0</span></div>
-            </div>
-          </div>
-
-          <div class="input-ans">
-            <input id="answerInput" class="num-input" type="text" placeholder="Tap Start Timer, then type answer" inputmode="numeric" autocomplete="off" />
-            <button class="btn" id="startBtn">Start Timer</button>
-            <button class="btn" id="checkBtn">Check</button>
-          </div>
-
-          <div class="result" id="result">No attempts yet — generate a question to begin.</div>
-        </div>
-
-        <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
-          <button class="btn" id="nextBtn">Next</button>
-          <div class="small">Quick feedback: <span id="quickFeedback">—</span></div>
-        </div>
-      </div>
-    </main>
+      </div><div class="section">
+    <label>Operation</label>
+    <div class="chips" id="operation">
+      <div class="chip active" data-op="mix">Mix</div>
+      <div class="chip" data-op="add">Add</div>
+      <div class="chip" data-op="sub">Subtract</div>
+      <div class="chip" data-op="mul">Multiply</div>
+      <div class="chip" data-op="div">Divide</div>
+    </div>
   </div>
 
-  <footer>Made with ☕ and math. Small parallax + animations included.</footer>
+  <div class="section">
+    <label>Test settings</label>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <input class="input" id="questionCount" type="number" min="1" max="50" value="10" />
+    </div>
+    <div class="small">Questions per set</div>
+  </div>
 
-  <script>
+  <div class="section">
+    <button class="btn" id="newQ">Generate Question</button>
+  </div>
+
+  <div class="section">
+    <label>Tip</label>
+    <div class="small">Choose difficulty and operation. Tap the <strong>Start Timer</strong> button when you're ready to begin solving. Type your answer — the input will turn green the instant the full correct answer is typed and the timer stops. If the answer is incorrect the input glows red. Feedback will show speed and tips to improve.</div>
+  </div>
+</aside>
+
+<main>
+  <div class="stage panel">
+    <div class="parallax" id="parallax">
+      <div class="layer l1"></div>
+      <div class="layer l2"></div>
+    </div>
+
+    <div class="question-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="small">Difficulty: <span id="curDiff">Easy</span> · Operation: <span id="curOp">Mix</span></div>
+          <div class="question" id="question">—</div>
+        </div>
+        <div style="text-align:right">
+          <div class="timer" id="timer">00.000 s</div>
+          <div class="small">Attempts: <span id="attempts">0</span></div>
+        </div>
+      </div>
+
+      <div class="input-ans">
+        <input id="answerInput" class="num-input" type="text" placeholder="Tap Start Timer, then type answer" inputmode="numeric" autocomplete="off" />
+        <button class="btn" id="startBtn">Start Timer</button>
+        <button class="btn" id="checkBtn">Check</button>
+      </div>
+
+      <div class="result" id="result">No attempts yet — generate a question to begin.</div>
+    </div>
+
+    <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
+      <button class="btn" id="nextBtn">Next</button>
+      <div class="small">Quick feedback: <span id="quickFeedback">—</span></div>
+    </div>
+  </div>
+</main>
+
+  </div>  <footer>Made with ☕ and math. Small parallax + animations included.</footer>  <script>
     // --- State ---
     const state = {
       difficulty: 'easy',
@@ -361,6 +354,5 @@
 
     // init sample
     generateAndShow();
-  </script>
-</body>
+  </script></body>
 </html>
